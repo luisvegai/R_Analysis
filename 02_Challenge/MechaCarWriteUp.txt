@@ -1,0 +1,125 @@
+
+#####################################################################
+
+## MPG Regression
+
+Mpg testing dataset of 50 potential prototype MechaCars. The MechaCar prototypes were produced using multiple design specifications to identify ideal vehicle performance. Multiple metrics such as vehicle length, vehicle weight, spoiler angle, drivetrain, and ground clearance were collected for each vehicle.
+
+
+
+summary(lm(mpg ~ vl + vw + sa + gc + AWD,data=data))
+
+Call:
+lm(formula = mpg ~ vl + vw + sa + gc + AWD, data = data)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-19.3571  -4.8045   0.5183   5.4414  19.4413 
+
+Coefficients:
+            Estimate Std. Error t value Pr(>|t|)    
+(Intercept)   47.013      1.776  26.472  < 2e-16 ***
+vl            12.748      1.335   9.549 2.72e-12 ***
+vw             2.411      1.275   1.891   0.0652 .  
+sa             1.289      1.302   0.990   0.3276    
+gc             8.952      1.371   6.531 5.58e-08 ***
+AWD1          -3.769      2.539  -1.485   0.1447    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 8.783 on 44 degrees of freedom
+Multiple R-squared:  0.7143,	Adjusted R-squared:  0.6819 
+F-statistic: 22.01 on 5 and 44 DF,  p-value: 5.578e-11
+
+
+
+** Which variables/coefficients provided a non-random amount of variance to the mpg values in the dataset?
+
+The variables that provide a non-random amount of variance to the mpg values are: Vehicle length and ground clearance.
+The intercept estimate is significant which means that there are possibly other variables that can be added to the model that can further explain the variability of the dependent variable.
+
+
+** Is the slope of the linear model considered to be zero? Why or why not?
+
+No for the variables "Vehicle length" and "ground clearance". Judging by the Pr value, the likelihood that the slope
+calculated for those two variables is less than 0.1%. For the variable "vehicle weight", such likelihood is less than 10%.
+
+
+** Does this linear model predict mpg of MechaCar prototypes effectively? Why or why not?
+
+The model can moderately predict mpg of MechaCar prototypes, since the R-squared value is 0.6819.
+Also, the model residuals are distributed normally, which means the model is valid.
+
+	Shapiro-Wilk normality test
+
+data:  data_result$residuals
+W = 0.98497, p-value = 0.7703
+
+
+
+#####################################################################
+
+## Suspension Coil Summary
+
+[1] "PSI"
+      mean   median variance standard_deviation
+1 1499.531 1499.747 76.23459           8.731242
+
+These results indicate that the mean of the suspension coils is 1499.531, the median is equal to 1499.747, the standard deviation is 8.731, and the variance is 76.235. This complies with the design specifications for the MechaCar.
+
+## Suspension Coil T-Test
+
+The data as it is does not have a normal distribution (p value of Shapiro test < 0.05 )
+After determining and eliminating outliers from the dataset using the inter-quantile range, the Shapiro test gave as a result that the data still doesn't have a normal distribution. However, provided our sample size isn't too small, we shouldn't be overly concerned if our data appear to violate the normal assumption.
+
+The one-sample t-test gives as a result that the mean of the population is not statistically different from the sample mean (p > 0.05).
+
+One Sample t-test
+
+data:  data_2$PSI
+t = -1.9681, df = 115, p-value = 0.05147
+alternative hypothesis: true mean is not equal to 1500
+95 percent confidence interval:
+1499.016 1500.003
+sample estimates:
+mean of x 
+1499.51 
+
+
+
+
+
+#####################################################################
+
+## Design Your Own Study
+
+This is a study that compares the performance of the MechaCar prototype vehicle to other comparable vehicles on the market.
+
+
+** Metrics that  would be of interest to a consumer (cost, fuel efficiency, color options, etc.).
+
+Lets choose fuel efficiency as the metric that would be of interest to a consumer.
+
+
+** Determine the question, null and alternative hypothesis, and what statistical test could be used to test this hypothesis
+
+Question: the fuel efficiency of MechaCar cars is different than the fuel efficiency of Brand X cars.
+
+H0 : There is no statistical difference between the two observed sample means.
+Ha : There is a statistical difference between the two observed sample means.
+
+Unpaired t-test would be required: 1 sample from each independent populations of cars.
+
+The test would be run with the following command:
+
+t.test(MechaCar_fuel_efficiency_sample_values, BrandX_fuel_efficiency_sample_values, alternative = "two.sided", var.equal = FALSE)
+
+If more tests are required, we need to replace Brand X fuel efficiency sample values with the corresponding brand values we would like to compare with MechaCar cars.
+
+
+** Data that must be collected:
+
+We must collect data on fuel efficiency from a sample of cars for MechaCar cars and Brand X cars. The samples must be equal in length. If more brands need to be compared, samples of equal size should be picked and the score values must be gathered.
+
+
+

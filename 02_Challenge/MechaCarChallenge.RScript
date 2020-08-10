@@ -1,0 +1,96 @@
+library(jsonlite)
+library(tidyverse)
+
+
+## MPG Regression
+
+data <- read.csv(file='MechaCar_mpg.csv',check.names=F,stringsAsFactors = F)
+
+for(i in c(1,2,3,4,5,6)){
+  # datag<-data[,i]
+  # colnames(datag)<-"dat"
+  print(colnames(data)[i])
+  print(summarize(data,mean = mean(data[,i]),median = median(data[,i]), variance = var(data[,i]),standard_deviation = sd(data[,i])))
+}
+
+colnames(data)<-c("vl","vw","sa","gc","AWD","mpg")
+shapiro.test(log10(data$'vl')) # ok
+shapiro.test(data$'sa') # ok
+shapiro.test(data$'vw') # ok
+shapiro.test(data$'gc') # ok
+
+data$'vl'<-log10(data$'vl')
+
+cor(data[,1:4])
+
+
+datab<-data
+data[,1:4]<-scale(data[,1:4])
+data[,5]<-as.factor(data[,5])
+
+data_result<-summary(lm(mpg ~ vl + vw + sa + gc + AWD,data=data))
+shapiro.test(data_result$residuals)
+
+
+
+
+## Suspension Coil Summary
+
+
+data <- read.csv(file='Suspension_Coil.csv',check.names=F,stringsAsFactors = F)
+
+for(i in 3){
+  print(colnames(data)[i])
+  print(summarize(data,mean = mean(data[,i]),median = median(data[,i]), variance = var(data[,i]),standard_deviation = sd(data[,i])))
+}
+
+
+
+## Suspension Coil T-Test
+
+
+shapiro.test(log10(data$'PSI'))
+
+boxplot(data$'PSI')
+
+plt <- ggplot(data,aes(x=log10(PSI))) #import dataset into ggplot2
+plt + geom_density()
+
+
+Q <- quantile(data$PSI, probs=c(.25, .75), na.rm = FALSE)
+iqr <- IQR(data$PSI)
+
+
+up <-  Q[2]+1.5*iqr # Upper Range  
+low<- Q[1]-1.5*iqr # Lower Range???
+
+
+data_2<- subset(data,data$PSI > (Q[1] - 1.5*iqr) & data$PSI < (Q[2]+1.5*iqr))
+
+plt <- ggplot(data_2,aes(x=log10(PSI))) #import dataset into ggplot2
+plt + geom_density()
+
+shapiro.test(data_2$'PSI')
+
+t.test(log10(data_2$'PSI'),mu= 1500)
+
+#One Sample t-test
+
+#data:  data_2$PSI
+#t = -1.9681, df = 115, p-value = 0.05147
+#alternative hypothesis: true mean is not equal to 1500
+#95 percent confidence interval:
+#1499.016 1500.003
+#sample estimates:
+#mean of x 
+#1499.51 
+ 
+
+
+
+
+
+
+
+
+
